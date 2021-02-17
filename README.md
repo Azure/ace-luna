@@ -1,33 +1,47 @@
-# Project
+# Sell your application through Azure Marketplace SaaS offer using Project Luna
+## Overview
+Publishing your applications in Azure Marketplace and enabling transaction through Microsoft allows users to discover and subscribe your applications directly from Azure portal. It dramatically increases the visibility of your applications. However, publishing a SaaS offer and enable transaction through Microsoft usually required extra coding work in your application, including enabling AAD authentication, implementing the fulfillment API, billing API and the user landing page. This work is non-trivial especially if you are not familiar with Azure.
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## What is Project Luna?
+Project Luna provides a SaaS application template, which allows Microsoft partners publish applications in Azure Marketplace with zero to minimum coding effort:
+- Project Luna implemented the fulfillment APIs and meter APIs (under development) and provided a configuration-based integration experience for Marketplace SaaS offers.
+- Project Luna provides a partner management portal where you can manage all your offers and user subscriptions.
+- Project Luna allows you automate user transactions and operations using ARM templates, or webhooks. 
+- Project Luna provides a default user landing page and a user management page where user can manage their subscriptions.
+- Secured by Azure Active Directory authentication.
+- Project Luna is an open source project. It is highly customizable and extensible. 
 
-As the maintainer of this project, please make a few updates:
+## Who is Project Luna for?
+Project Luna is for Microsoft partners who wants to sell their applications or services in Azure Marketplace and enable transaction through Microsoft. 
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+If you want to sell your application through Microsoft but you don’t have enough resource to implement all the required APIs and UIs, Project Luna can help you to enable a SaaS offer deployment and connect to Azure Marketplace with zero to minimum coding effort. All you need to do is deploying Luna service to your subscription and configure the offer in the management portal.
 
-## Contributing
+If you have enough dev resource and time, Project Luna can also be a good starting point. Project Luna provides decoupled web UI and backend API services, you can easily create your own web UI or extend your current UI experience and plug-in the Luna functionalities by calling the backend API service. Project Luna is built on top of a simple data model, which you can extend and add your own functions and business logic.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+## Architecture Overview
+Following is the architecture diagram of Project Luna:
+- The ISV portal and user portal are created as React applications and deployed to Azure webapp services.
+- The API application is a .netcore Azure webapp. It is the central piece of the service.
+  - It handles all the requests from ISV and user portal. 
+  - It receives and sends requests from/to Azure Marketplace through the fulfillment APIs. 
+  - It orchestrates the application provisioning workflow, deploys the ARM template and/or triggers webhook per user definition.
+- A webjob is deployed together with the API application to manage the application provisioning workflow.
+- Azure key vault is used to store all the credentials, including SQL connection string, storage key and Azure Active Directory application secrets.
+- Azure SQL Database is used to store service metadata.
+- Azure storage account is used to store ARM template files.
+- Azure Active Directory authentication is used in all the UI webapp and for communication between different services in Project Luna.
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+![Luna Architecture](Resources/Documentation/images/overview_architecture.png)
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+## How to use Project Luna
+Project Luna is very easy to use. You can deploy Luna services to your own Azure subscription from a single PowerShell command. It deploys and configures all the Azure resources and Azure Active Directory applications. After the deployment, you can follow the guidance on the ISV management portal to create and configure your offer. 
 
-## Trademarks
+For more details, please see the Project Luna documentation:
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft 
-trademarks or logos is subject to and must follow 
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+- [How to deploy Luna services?](Resources/Documentation/deploy_luna_services.md)
+- [How to configure and manage offer?](Resources/Documentation/configure_and_manage_offers.md)
+- [How to manage user subscriptions?](Resources/Documentation/manage_user_subscriptions.md)
+- [Learn about end user experience.](Resources/Documentation/end_user_experience.md)
+
+## Feedback
+If you have any feedback or feature request, please open an issue in this GitHub repo. We will triage all the issues regularly. Due to the resource limit, we can’t guarantee solving all the issues on time. You can also contribute to the project directly by submitting a pull request for your code change. We will review, test and merge your changes. Your contribution to the project will be very appreciated. 
