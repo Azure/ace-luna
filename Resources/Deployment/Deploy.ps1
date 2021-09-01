@@ -251,7 +251,7 @@ $sqlServerAdminPasswordRaw = [System.Web.Security.Membership]::GeneratePassword(
 $sqlServerAdminPassword = ConvertTo-SecureString $sqlServerAdminPasswordRaw.ToString() -AsPlainText -Force
 
 if ($buildLocation -eq "default"){
-    $buildLocation = "https://github.com/Azure/AIPlatform/raw/master/end-to-end-solutions/Luna/Resources/Builds/latest"
+    $buildLocation = "https://github.com/Azure/ace-luna/raw/main/Resources/Builds/latest"
 }
 
 if ($sqlScriptFileLocation -eq "default"){
