@@ -12,7 +12,7 @@
     "axios": "^0.19.0",
     "formik": "^2.1.4",
     "json-to-url": "^1.0.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "office-ui-fabric-react": "^6.211.0",
     "react": "^16.13.1",
     "react-adal": "^0.5.0",
