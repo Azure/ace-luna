@@ -26,7 +26,7 @@ import SubscriptionsService from '../../services/SubscriptionsService';
 import { toast } from "react-toastify";
 import PlansService from '../../services/PlansService';
 import { getInitialUpdateSubscriptionModel, subscriptionValidator } from "./formUtils/subscriptionFormUtils";
-import adalContext from "../../adalConfig";
+import { useMsal } from '@azure/msal-react';
 import { useGlobalContext } from '../../shared/components/GlobalProvider';
 import { handleSubmissionErrorsForForm } from '../../shared/formUtils/utils';
 
@@ -50,11 +50,12 @@ const Subscriptions: React.FunctionComponent = () => {
   const [subscriptionPost, setSubscriptionPost] = useState<IUpdateSubscriptionModel>(getInitialUpdateSubscriptionModel());
   const globalContext = useGlobalContext();
 
-  let usr = adalContext.AuthContext.getCachedUser();
+  const { instance } = useMsal();
+  let usr = instance.getActiveAccount();
   let ownerEmail = "";
-  if (usr && usr.profile) {
-    if (usr.userName)
-      ownerEmail = usr.userName;
+  if (usr && usr.username) {
+    if (usr.username)
+      ownerEmail = usr.username;
   }
 
   const _onColumnClick = (ev: React.MouseEvent<HTMLElement>, column: IColumn): void => {

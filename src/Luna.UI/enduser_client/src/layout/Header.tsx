@@ -2,12 +2,12 @@ import React from 'react';
 import {Image, Link, Stack, Text, getTheme} from 'office-ui-fabric-react';
 import {useHistory} from "react-router";
 import {WebRoute} from "../shared/constants/routes";
-import adalContext from "../adalConfig";
+import {getMsalConfig} from "../auth";
 
 
 const Header: React.FunctionComponent = () => {
 
-
+  const msalClient = getMsalConfig();
   const logo = "../../logo.png";
   const isvName = window.Configs.ISV_NAME;
   const headerBackgroundColor = window.Configs.HEADER_BACKGROUND_COLOR;
@@ -16,12 +16,13 @@ const Header: React.FunctionComponent = () => {
   const theme = getTheme();
   const history = useHistory();
 
-  var response = adalContext.AuthContext.getCachedUser();
-  if (response && response.profile && response.profile.name)
-    userName = response.profile.name;
+  var accounts = msalClient.getAllAccounts()
+  var account = accounts[0]
+  if (account && account.username)
+    userName = account.username;
 
   const handleLogOut = () => {
-    adalContext.LogOut();
+    msalClient.logoutRedirect();
   };
 
   return (

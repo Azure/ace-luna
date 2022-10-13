@@ -3,7 +3,10 @@ import * as jsonToUrl from "json-to-url";
 import Axios, {AxiosRequestConfig, AxiosResponse} from "axios";
 import {ERROR_STATE} from "../layout/GlobalErrorController";
 import {Cache, Hub} from "aws-amplify";
-import {getToken} from "../adalConfig";
+import {getIdToken, getMsalConfig} from "../auth";
+
+
+const msalInstance = getMsalConfig();
 
 export interface IRequestOptions {
   url: string;
@@ -27,10 +30,10 @@ export abstract class ServiceBase {
   }
 
   private static async getTokenWithRetry(){
-    var token = await getToken();
+    var token = await getIdToken(msalInstance);
     for (var i=0; token === null&& i<10;i++){
       await this.sleep(500);
-      token = await getToken();
+      token = await getIdToken(msalInstance);
     }
 
     return token;
@@ -82,7 +85,7 @@ export abstract class ServiceBase {
 
       result = new Result<T>(axiosResponse.data as T, true, null);
 
-    } catch (error) {
+    } catch (error: any) {
 
       console.log(error);
 
@@ -152,7 +155,7 @@ export abstract class ServiceBase {
         throw new Error('No Result');
 
       result = new Result<T>(axiosResponse.data as T, true, null);
-    } catch (error) {
+    } catch (error: any) {
 
       console.log(error);
 
