@@ -6,20 +6,26 @@ import {AuthRoute} from './shared/components/AuthRoute';
 import * as Routes from './routes';
 import {NotFound} from "./shared/components/NotFound";
 import Layout from "./layout/Layout";
+import { InteractionType } from "@azure/msal-browser";
+import { MsalAuthenticationTemplate, MsalProvider } from "@azure/msal-react";
 
 import {initializeIcons} from 'office-ui-fabric-react/lib/Icons';
 import {toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { getMsalConfig } from "./auth";
 
 initializeIcons(/* optional base url */);
 
 toast.configure({autoClose: 2000});
+const msalClient = getMsalConfig();
 
 const App: React.FC = () => {
 
   const BaseRoutes = () => {
 
     return (
+      <MsalProvider instance={msalClient}>
+      <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}>
     <Layout>
       <Switch>
         {/* Protected Routes */}
@@ -30,6 +36,8 @@ const App: React.FC = () => {
         <Route component={NotFound}/>
       </Switch>
     </Layout>
+    </MsalAuthenticationTemplate>
+    </MsalProvider>
     );
   };
 

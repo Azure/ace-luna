@@ -33,8 +33,8 @@ const OperationHistory: React.FunctionComponent = () => {
   const [state, setstate] = useState<OperationHistoryModel>(getInitialOperationHistoryModel);
   const [loadingOperationHistory, setLoadingOperationHistory] = useState<boolean>(true);
 
-  const {subscriptionId} = useParams();
-
+  // const {subscriptionId} = useParams();
+  const subscriptionId = "a6c2a7cc-d67e-4a1a-b765-983f08c0423a";
   useEffect(() => {
     if (subscriptionId)
       getData(subscriptionId);

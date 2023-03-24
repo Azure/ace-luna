@@ -9,7 +9,6 @@ import {FluentCustomizations} from '@uifabric/fluent-theme';
 import {Customizer, mergeStyles} from 'office-ui-fabric-react';
 import {GlobalProvider} from "./shared/components/GlobalProvider";
 import { runWithAdal } from 'react-adal';
-import adalContext from './adalConfig';
 const DO_NOT_LOGIN = false;
 
 declare global {
@@ -45,10 +44,8 @@ const AppIndex: React.SFC<{}> = () => {
   );
 };
 
-runWithAdal(adalContext.AuthContext, () => {
   ReactDOM.render(
     <AppIndex />,
     document.getElementById('root') as HTMLElement
   );
   serviceWorker.unregister();
-},DO_NOT_LOGIN);

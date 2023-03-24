@@ -23,7 +23,9 @@ import SubscriptionsService from '../../services/SubscriptionsService';
 import { useHistory, useLocation } from 'react-router';
 import { toast } from "react-toastify";
 import * as qs from "query-string";
-import adalContext from "../../adalConfig";
+import { useMsal } from '@azure/msal-react';
+
+import {getMsalConfig} from "../../auth";
 import { getInitialLandingModel } from "./formutlis/landingUtils";
 import { getInitialCreateSubscriptionModel } from "../Subscriptions/formUtils/subscriptionFormUtils";
 import { useGlobalContext } from '../../shared/components/GlobalProvider';
@@ -59,11 +61,12 @@ const LandingPage: React.FunctionComponent = (props) => {
     closeButtonAriaLabel: 'Close date picker'
   };
   const globalContext = useGlobalContext();
+  const msalClient = getMsalConfig();
 
   useEffect(() => {
     body.setAttribute('class', 'landing')
     console.log('mounted');
-    getinfo();
+    GetInfo();
 
     return () => {
       console.log('will unmount');
@@ -83,14 +86,14 @@ const LandingPage: React.FunctionComponent = (props) => {
     return false;
   }
 
-  const getinfo = async () => {
+  const GetInfo = async () => {
     setLoadingFormData(true);
     var result = qs.parse(location.search);
     if (!result.token) {
       setLoadingFormData(false);
       return;
     }
-
+  
     var token = decodeURI(result.token as string);
 
     let data = await EndUserLandingService.resolveToken(`\"${token}\"`);
@@ -98,13 +101,12 @@ const LandingPage: React.FunctionComponent = (props) => {
     if (data.value && data.success) {
 
       let formData: ILandingModel = getInitialLandingModel();
-
-      let usr = adalContext.AuthContext.getCachedUser();
-      if (usr && usr.profile) {
-        if (usr.profile.name)
-          formData.fullName = usr.profile.name;
-        if (usr.userName)
-          formData.email = usr.userName;
+      let usr = msalClient.getActiveAccount();
+      if (usr && usr.username) {
+        if (usr.username)
+          formData.fullName = usr.username;
+        if (usr.username)
+          formData.email = usr.username;
       }
 
       // set resolvetoken data
